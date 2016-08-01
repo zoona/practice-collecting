@@ -1,4 +1,6 @@
-# Overview
+# Introduction
+
+## Overview
 
 다양한 소스에서 발생한 대량의 로그 데이터를 중앙 데이터 스토어로 효과적으로 수집 집계(aggregating)하거나 이동시킬 수 있는 신뢰할수있는 분산 시스템
 
@@ -16,15 +18,15 @@ Disk Space - Sufficient disk space for configurations used by channels or sinks
 
 Directory Permissions - Read/Write permissions for directories used by agent
 
-# Architecture
+## Architecture
 
-## Data flow model
+### Data flow model
 
-## Complex flows
+### Complex flows
 
-## Reliability
+### Reliability
 
-## Recoverability
+### Recoverability
 
 # Setup
 ## Setting up an agent
