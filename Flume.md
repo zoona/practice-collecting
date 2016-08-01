@@ -6,7 +6,7 @@
 
 데이터 소스를 커스터마이징 할 수 있기 때문에 로그 데이터 수집에 제한되지 않고, 소셜미디어 데이터, 이메일 메세지등 다량의 이벤트 데이터를 전송하는데에 사용할 수 있다
 
-Core Concepts
+## Core Concepts
 
 Event : Flume이 source로부터 destination까지 전송하는 데이터 단위 (byte payload)
 
