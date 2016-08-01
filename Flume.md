@@ -6,22 +6,6 @@
 
 데이터 소스를 커스터마이징 할 수 있기 때문에 로그 데이터 수집에 제한되지 않고, 소셜미디어 데이터, 이메일 메세지등 다량의 이벤트 데이터를 전송하는데에 사용할 수 있다
 
-## Core Concepts
-
-Event : Flume이 source로부터 destination까지 전송하는 데이터 단위 (byte payload)
-
-Flow : Event의 흐름
-
-Client : Agent로 데이터를 전달하는 interface의 구현
-
-Agent: Event를 수집, 저장, 전달하는 독립된 프로세스
-
-Source : Event를 수집해서 Channel에 저장
-
-Sink : Channel로 부터 가져와서 목적지, 혹은 다른 Agent로 전달
-
-Channel : Source에서 Sink로 보내는 Event의 임시 저장소
-
 ## System Requirements
 
 Java Runtime Environment - Java 1.6 or later (Java 1.7 Recommended)
