@@ -17,6 +17,16 @@ Disk Space - Sufficient disk space for configurations used by channels or sinks
 Directory Permissions - Read/Write permissions for directories used by agent
 
 ## Architecture
+
+- Data flow model
+
+- Complex flows
+
+- Reliability
+
+- Recoverability
+
+
 # Setup
 ## Setting up an agent
 ## Data ingestion
