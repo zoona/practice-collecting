@@ -31,3 +31,12 @@ print "Hello"
 
 ![](https://camo.githubusercontent.com/fc7c341952a08eeeaecac978559a79eda840b1a7/68747470733a2f2f666c756d652e6170616368652e6f72672f5f696d616765732f5573657247756964655f696d61676530302e706e67)
 
+# Architecture
+
+## Data flow Model
+
+## Complex Flows
+
+## Reliability
+
+## Recoverability
