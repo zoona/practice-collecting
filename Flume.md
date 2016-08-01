@@ -6,6 +6,12 @@ Flume 1.6.0 User Guide# Introduction
 데이터 소스를 커스터마이징 할 수 있기 때문에 로그 데이터 수집에 제한되지 않고, 소셜미디어 데이터, 이메일 메세지등 다량의 이벤트 데이터를 전송하는데에 사용할 수 있다
 
 ## System Requirements
+
+Java Runtime Environment - Java 1.6 or later (Java 1.7 Recommended)
+Memory - Sufficient memory for configurations used by sources, channels or sinks
+Disk Space - Sufficient disk space for configurations used by channels or sinks
+Directory Permissions - Read/Write permissions for directories used by agent
+
 ## Architecture
 # Setup
 ## Setting up an agent
