@@ -10,13 +10,13 @@
 
 ## System Requirements
 
-Java Runtime Environment - Java 1.6 or later (Java 1.7 Recommended)
+- Java Runtime Environment - Java 1.6 or later (Java 1.7 Recommended)
 
-Memory - Sufficient memory for configurations used by sources, channels or sinks
+- Memory - Sufficient memory for configurations used by sources, channels or sinks
 
-Disk Space - Sufficient disk space for configurations used by channels or sinks
+- Disk Space - Sufficient disk space for configurations used by channels or sinks
 
-Directory Permissions - Read/Write permissions for directories used by agent
+- Directory Permissions - Read/Write permissions for directories used by agent
 
 ## Architecture
 
