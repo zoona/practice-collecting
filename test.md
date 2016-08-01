@@ -41,6 +41,4 @@ print "Hello"
 
 ## Recoverability
 
-# Setup
 
-## Setting up an agent
