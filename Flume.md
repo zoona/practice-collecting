@@ -28,6 +28,10 @@ Directory Permissions - Read/Write permissions for directories used by agent
 
 ### Recoverability
 
+
+
+
+
 # Setup
 ## Setting up an agent
 ## Data ingestion
