@@ -1,7 +1,7 @@
 # Summary
 
 * [Introduction](README.md)
-* [Flume](test.md)
+* [Flume](Flume.md)
 * Logstash
 * Beats
 * Fluentd
