@@ -18,13 +18,13 @@ Directory Permissions - Read/Write permissions for directories used by agent
 
 # Architecture
 
-- Data flow model
+## Data flow model
 
-- Complex flows
+## Complex flows
 
-- Reliability
+## Reliability
 
-- Recoverability
+## Recoverability
 
 # Setup
 ## Setting up an agent
