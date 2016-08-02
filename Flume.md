@@ -20,7 +20,6 @@ System Requirements
 
 ![](https://flume.apache.org/_images/UserGuide_image00.png)
 
-
 - Data flow model
 
 - Complex flows
