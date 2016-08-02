@@ -203,8 +203,9 @@ A given configuration file might define several named agents; when a given Flume
 
 ```
 $ bin/flume-ng agent --conf conf --conf-file example.conf --name a1 -Dflume.root.logger=INFO,console
-
 ```
+
+
 
 ### Zookeeper based Configuration
 
