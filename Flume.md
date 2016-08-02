@@ -183,6 +183,26 @@ a1.sources.r1.channels = c1
 a1.sinks.k1.channel = c1
 ```
 
+This configuration defines a single agent named a1. 
+
+이 설정은 a1이라는 agent를 정의함
+
+a1 has a source that listens for data on port 44444, a channel that buffers event data in memory, and a sink that logs event data to the console. 
+
+a1은 44444 포트로 데이터를 listen하는 source, 메모리에 이벤트 데이터를 버퍼링하는 channel, 콘솔로 이벤트 데이터를 로깅하는 sink를 갖고 있다.
+
+The configuration file names the various components, then describes their types and configuration parameters. 
+
+설정 파일은 다양한 component들을 이름짓고, 그것들의 종류와 속성값들을 설정한다.
+
+A given configuration file might define several named agents; when a given Flume process is launched a flag is passed telling it which named agent to manifest.
+
+이 설정파일은 몇몇 agent들을 이름지어 정의할 수 있는데, Flume 프로세스가 기동될 때 어떤 agent를 실행할 지 flag를 넘겨받게 된다.
+
+```
+$ bin/flume-ng agent --conf conf --conf-file example.conf --name a1 -Dflume.root.logger=INFO,console
+
+```
 
 ### Zookeeper based Configuration
 
