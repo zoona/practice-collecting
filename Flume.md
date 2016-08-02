@@ -33,6 +33,8 @@ System Requirements
 
 ## Setting up an agent
 
+Flume agent configuration is stored in a local configuration file.
+
 Java properties file format
 
 
