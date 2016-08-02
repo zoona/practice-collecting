@@ -22,42 +22,11 @@ System Requirements
 
 ![](https://flume.apache.org/_images/UserGuide_image00.png)
 
-A Flume event is defined as a unit of data flow having a byte payload and an optional set of string attributes.
-
-A Flume agent is a (JVM) process that hosts the components through which events flow from an external source to the next destination (hop).
-
-A Flume source consumes events delivered to it by an external source like a web server.
-
-The external source sends events to Flume in a format that is recognized by the target Flume source. For example, an Avro Flume source can be used to receive Avro events from Avro clients or other Flume agents in the flow that send events from an Avro sink.
-
-A similar flow can be defined using a Thrift Flume Source to receive events from a Thrift Sink or a Flume Thrift Rpc Client or Thrift clients written in any language generated from the Flume thrift protocol.When a Flume source receives an event, it stores it into one or more channels.
-
-The channel is a passive store that keeps the event until it’s consumed by a Flume sink. The file channel is one example – it is backed by the local filesystem.
-
-The sink removes the event from the channel and puts it into an external repository like HDFS (via Flume HDFS sink) or forwards it to the Flume source of the next Flume agent (next hop) in the flow.
-
-The source and sink within the given agent run asynchronously with the events staged in the channel.
-
-
 - Complex flows
-
-Flume allows a user to build multi-hop flows where events travel through multiple agents before reaching the final destination.
-
-It also allows fan-in and fan-out flows, contextual routing and backup routes (fail-over) for failed hops.
-
 
 - Reliability
 
-The events are staged in a channel on each agent. The events are then delivered to the next agent or terminal repository (like HDFS) in the flow. The events are removed from a channel only after they are stored in the channel of next agent or in the terminal repository. This is a how the single-hop message delivery semantics in Flume provide end-to-end reliability of the flow.
-
-Flume uses a transactional approach to guarantee the reliable delivery of the events. The sources and sinks encapsulate in a transaction the storage/retrieval, respectively, of the events placed in or provided by a transaction provided by the channel. This ensures that the set of events are reliably passed from point to point in the flow. In the case of a multi-hop flow, the sink from the previous hop and the source from the next hop both have their transactions running to ensure that the data is safely stored in the channel of the next hop.
-
-
 - Recoverability
-
-The events are staged in the channel, which manages recovery from failure. Flume supports a durable file channel which is backed by the local file system. There’s also a memory channel which simply stores the events in an in-memory queue, which is faster but any events still left in the memory channel when an agent process dies can’t be recovered.
-
-
 
 
 # Setup
