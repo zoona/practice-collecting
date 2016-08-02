@@ -22,6 +22,22 @@ System Requirements
 
 ![](https://flume.apache.org/_images/UserGuide_image00.png)
 
+A Flume event is defined as a unit of data flow having a byte payload and an optional set of string attributes.
+
+A Flume agent is a (JVM) process that hosts the components through which events flow from an external source to the next destination (hop).
+
+A Flume source consumes events delivered to it by an external source like a web server.
+
+The external source sends events to Flume in a format that is recognized by the target Flume source. For example, an Avro Flume source can be used to receive Avro events from Avro clients or other Flume agents in the flow that send events from an Avro sink.
+
+A similar flow can be defined using a Thrift Flume Source to receive events from a Thrift Sink or a Flume Thrift Rpc Client or Thrift clients written in any language generated from the Flume thrift protocol.When a Flume source receives an event, it stores it into one or more channels.
+
+The channel is a passive store that keeps the event until it’s consumed by a Flume sink. The file channel is one example – it is backed by the local filesystem.
+
+The sink removes the event from the channel and puts it into an external repository like HDFS (via Flume HDFS sink) or forwards it to the Flume source of the next Flume agent (next hop) in the flow.
+
+The source and sink within the given agent run asynchronously with the events staged in the channel.
+
 
 - Complex flows
 
