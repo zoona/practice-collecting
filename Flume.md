@@ -160,9 +160,6 @@ Agent는 이제 설정 파일에 설정한 대로 source와 sink들을 실행 �
 
 ```
 # example.conf: A single-node Flume configuration
-
-
-
 # Name the components on this agent
 
 a1.sources = r1
