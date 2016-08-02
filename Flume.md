@@ -20,10 +20,15 @@ System Requirements
 
 - Data flow model
 
-https://flume.apache.org/_images/UserGuide_image00.png
+![](https://flume.apache.org/_images/UserGuide_image00.png)
 
 
 - Complex flows
+
+Flume allows a user to build multi-hop flows where events travel through multiple agents before reaching the final destination.
+
+It also allows fan-in and fan-out flows, contextual routing and backup routes (fail-over) for failed hops.
+
 
 - Reliability
 
