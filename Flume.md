@@ -138,7 +138,10 @@ The configuration file will contain names of these components and file-channel a
 
 ### Starting an agent
 
-```  ```
+```
+$ bin/flume-ng agent -n $agent_name -c conf -f conf/flume-conf.properties.template
+```
+
 
 
 ### A simple example
