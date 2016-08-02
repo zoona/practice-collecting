@@ -199,6 +199,8 @@ A given configuration file might define several named agents; when a given Flume
 
 이 설정파일은 몇몇 agent들을 이름지어 정의할 수 있는데, Flume 프로세스가 기동될 때 어떤 agent를 실행할 지 flag를 넘겨받게 된다.
 
+이 설정 파일은 아래와 같이 실행 시킬 수 있다.
+
 ```
 $ bin/flume-ng agent --conf conf --conf-file example.conf --name a1 -Dflume.root.logger=INFO,console
 
