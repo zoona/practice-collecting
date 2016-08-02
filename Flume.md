@@ -43,6 +43,8 @@ The configuration file includes properties of each source, sink and channel in a
 
 Configurations for one or more agents can be specified in the same configuration file.
 
+한개 이상의 Agent 설정을 한 설정 파일에서 관리
+
 Java properties file format
 
 
