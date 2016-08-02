@@ -20,6 +20,9 @@ System Requirements
 
 - Data flow model
 
+https://flume.apache.org/_images/UserGuide_image00.png
+
+
 - Complex flows
 
 - Reliability
