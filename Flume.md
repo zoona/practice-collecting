@@ -47,6 +47,7 @@ Configurations for one or more agents can be specified in the same configuration
 
 Java properties file format
 
+Java Properties 형식
 
 ## Data ingestion
 
