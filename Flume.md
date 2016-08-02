@@ -31,7 +31,7 @@ System Requirements
 
 # Setup
 
-## Setting up an agent
+## Agent 설정
 
 Flume agent configuration is stored in a local configuration file.
 
