@@ -205,6 +205,11 @@ A given configuration file might define several named agents; when a given Flume
 $ bin/flume-ng agent --conf conf --conf-file example.conf --name a1 -Dflume.root.logger=INFO,console
 ```
 
+Note that in a full deployment we would typically include one more option: --conf=<conf-dir>. 
+
+The <conf-dir> directory would include a shell script flume-env.sh and potentially a log4j properties file. 
+
+In this example, we pass a Java option to force Flume to log to the console and we go without a custom environment script.
 
 
 ### Zookeeper based Configuration
