@@ -35,6 +35,8 @@ System Requirements
 
 Flume agent configuration is stored in a local configuration file.
 
+The configuration file includes properties of each source, sink and channel in an agent and how they are wired together to form data flows.
+
 Java properties file format
 
 
