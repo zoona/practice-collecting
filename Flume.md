@@ -92,13 +92,13 @@ There’s also a memory channel which simply stores the events in an in-memory q
 
 ## Agent 설정
 
-* Agent에 대한 설정을 로컬 파일에서 관리
+Agent에 대한 설정을 로컬 파일에서 관리
 
-* 각 Source, Sink, Channel에 대한 설정과 이들이 어떻게 엮여있는지를 설정
+각 Source, Sink, Channel에 대한 설정과 이들이 어떻게 엮여있는지를 설정
 
-* 한개 이상의 Agent 설정을 한 설정 파일에서 관리
+한개 이상의 Agent 설정을 한 설정 파일에서 관리
 
-* Java Properties 형식
+Java Properties 형식
 
 
 ## Data ingestion
