@@ -34,8 +34,10 @@ System Requirements
 ## Setting up an agent
 
 Flume agent configuration is stored in a local configuration file.
+Agent에 대한 설정을 로컬 파일에서 관리
 
 The configuration file includes properties of each source, sink and channel in an agent and how they are wired together to form data flows.
+각 Source, Sink, Channel에 대한 설정과 이들이 어떻게 엮여있는지를 설정
 
 Configurations for one or more agents can be specified in the same configuration file.
 
