@@ -1,87 +1,187 @@
 # 소개
 
-다양한 소스에서 발생한 대량의 로그 데이터를 중앙 데이터 스토어로 효과적으로 수집 집계(aggregating)하거나 이동시킬 수 있는 신뢰할수있는 분산 시스템
+다양한 소스에서 발생한 대량의 로그 데이터를 중앙 데이터 스토어로 효과적으로 수집 집계\(aggregating\)하거나 이동시킬 수 있는 신뢰할수있는 분산 시스템
 
 스트림 지향의 데이터 플로우를 기반으로 하며 지정된 모든 서버로 부터 로그를 수집한 후 하둡 HDFS와 같은 중앙 저장소에 적재하여 분석하는 시스템을 구축해야 할 때 적합
 
 데이터 소스를 커스터마이징 할 수 있기 때문에 로그 데이터 수집에 제한되지 않고, 소셜미디어 데이터, 이메일 메세지등 다량의 이벤트 데이터를 전송하는데에 사용할 수 있다
 
-System Requirements
+시스템 요구사항
 
-- Java Runtime Environment - Java 1.6 or later (Java 1.7 Recommended)
+* Java Runtime Environment - Java 1.6 or later \(Java 1.7 Recommended\)
 
-- Memory - Sufficient memory for configurations used by sources, channels or sinks
+* Memory - Sufficient memory for configurations used by sources, channels or sinks
 
-- Disk Space - Sufficient disk space for configurations used by channels or sinks
+* Disk Space - Sufficient disk space for configurations used by channels or sinks
 
-- Directory Permissions - Read/Write permissions for directories used by agent
+* Directory Permissions - Read\/Write permissions for directories used by agent
 
-## Architecture
+
+## 구조
 
 ![](https://flume.apache.org/_images/UserGuide_image00.png)
 
-- Data flow model
+### Data flow model
 
-- Complex flows
+Flume Event는 **byte 단위의 데이터**와 **속성\(optional\)**들을 포함한 데이터 흐름의 단위
 
-- Reliability
+Flume Agent는 Event들이 외부에서 다음 목적지로 흐르는 Component들을 호스트하는 JVM 프로세스
 
-- Recoverability
+Flume source는 웹서버와 같은 외부 source에 의해 전달 된 이벤트들을 수집함
+
+외부 source는 대상 Flume Source가 인식 할 수 있는 형식으로 이벤트를 전송함
+
+예를들어 Avro 클라이언트나 Avro Sink로부터 온 이벤트를 보내는 Flow의 Flume Agent로부터 Avro 이벤트를 수신하는데에 Avro Flume Source가 쓰일 수 있다.
+
+A similar flow can be defined using a Thrift Flume Source to receive events from a Thrift Sink or a Flume Thrift Rpc Client or Thrift clients written in any language generated from the Flume thrift protocol.
+
+Thrift 프로토콜도 마찬가지
+
+When a Flume source receives an event, it stores it into one or more channels.
+
+Flume Source 가 이벤트를 수신하면 한개 이상의 채널에 저장한다.
+
+The channel is a passive store that keeps the event until it’s consumed by a Flume sink.
+
+Channel은 Flume Sink에 의해 소비될 때 까지 이벤트를 저장한다.
+
+The file channel is one example – it is backed by the local filesystem.
+
+The sink removes the event from the channel and puts it into an external repository like HDFS \(via Flume HDFS sink\) or forwards it to the Flume source of the next Flume agent \(next hop\) in the flow. 
+
+Sink는 Channel에서 이벤트를 가져와 HDFS와 같은 외부 저장소나 flow의 다음 Flume Source로 보낸다.
+
+The source and sink within the given agent run asynchronously with the events staged in the channel.
+
+Agent의 Source와 Sink는 Channel에 저장 된 이벤트들과 비동기로 실행 된다.
+
+### Complex flows
+
+Flume으로 이벤트들이 종단에 도착하기 전에 여러개의 Agent들을 통해 전송되는 Multi-hop Flow를 구성할수 있다.
+
+Fan-in과 Fan-out, Contextual routing과 fail-over를 위한 백업 전송을 지원
+
+### Reliability
+
+The events are staged in a channel on each agent.
+
+The events are then delivered to the next agent or terminal repository \(like HDFS\) in the flow.
+
+The events are removed from a channel only after they are stored in the channel of next agent or in the terminal repository.
+
+This is a how the single-hop message delivery semantics in Flume provide end-to-end reliability of the flow.
+
+Flume uses a transactional approach to guarantee the reliable delivery of the events.
+
+The sources and sinks encapsulate in a transaction the storage\/retrieval, respectively, of the events placed in or provided by a transaction provided by the channel. 
+
+This ensures that the set of events are reliably passed from point to point in the flow. 
+
+In the case of a multi-hop flow, the sink from the previous hop and the source from the next hop both have their transactions running to ensure that the data is safely stored in the channel of the next hop.
+
+### Recoverability
+
+The events are staged in the channel, which manages recovery from failure. 
+
+Flume supports a durable file channel which is backed by the local file system. 
+
+There’s also a memory channel which simply stores the events in an in-memory queue, which is faster but any events still left in the memory channel when an agent process dies can’t be recovered.
 
 
 # Setup
 
 ## Agent 설정
 
-- Agent에 대한 설정을 로컬 파일에서 관리
+* Agent에 대한 설정을 로컬 파일에서 관리
 
-- 각 Source, Sink, Channel에 대한 설정과 이들이 어떻게 엮여있는지를 설정
+* 각 Source, Sink, Channel에 대한 설정과 이들이 어떻게 엮여있는지를 설정
 
-- 한개 이상의 Agent 설정을 한 설정 파일에서 관리
+* 한개 이상의 Agent 설정을 한 설정 파일에서 관리
 
-- Java Properties 형식
+* Java Properties 형식
+
 
 ## Data ingestion
 
 ## Setting multi-agent flow
 
 ## Consolidation
+
 ## Multiplexing the flow
+
 # Configuration
+
 ## Defining the flow
+
 ## Configuring individual components
+
 ## Adding multiple flows in an agent
+
 ## Configuring a multi agent flow
+
 ## Fan out flow
+
 ## Flume Sources
+
 ### Flume Sinks
+
 ### Flume Channels
+
 ## Flume Channel Selectors
+
 ## Flume Sink Processors
+
 ## Event Serializers
+
 ### Flume Interceptors
+
 ### Flume Properties
+
 # Log4J Appender
+
 # Load Balancing Log4J Appender
+
 # Security
+
 # Monitoring
+
 ## JMX Reporting
+
 ## Ganglia Reporting
+
 ## JSON Reporting
+
 ## Custom Reporting
+
 ## Reporting metrics from custom components
+
 # Tools
+
 ## File Channel Integrity Tool
+
 ## Event Validator Tool
+
 # Topology Design Considerations
+
 ## Is Flume a good fit for your problem?
+
 ## Flow reliability in Flume
+
 ## Flume topology design
+
 ## Sizing a Flume deployment
+
 # Troubleshooting
+
 ## Handling agent failures
+
 ## Compatibility
+
 ### Tracing
+
 ### More Sample Configs
+
 # Component Summary
+
 # Alias Conventions
+
