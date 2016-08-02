@@ -98,7 +98,58 @@ Agent에 대한 설정을 로컬 파일에서 관리
 
 한개 이상의 Agent 설정을 한 설정 파일에서 관리
 
-Java Properties 형식
+Java Properties 형식을 따름
+
+### Configuring individual components
+
+Each component (source, sink or channel) in the flow has a name, type, and set of properties that are specific to the type and instantiation. 
+
+각 Component(Source, Sink, Channel)는 종류와, 인스턴스를 정의하는 name, type, property들을 갖음
+
+For example, an Avro source needs a hostname (or IP address) and a port number to receive data from. 
+
+예를들어 Avro Source는 데이터 수신을 위한 hostname과 port number가 필요함
+
+A memory channel can have max queue size (“capacity”), and an HDFS sink needs to know the file system URI, path to create files, frequency of file rotation (“hdfs.rollInterval”) etc.
+
+메모리 채널은 최대 큐 사이즈를 지정할 수 있고, HDFS Sink는 파일시스템 URI와 파일을 생성할 경로, 파일 로테이션 주기 등이 필요함
+
+All such attributes of a component needs to be set in the properties file of the hosting Flume agent.
+
+이러한 모든 속성들은 Flume Agent의 속성 파일에 정의되어 있어야 함
+
+### Wiring the pieces together
+
+The agent needs to know what individual components to load and how they are connected in order to constitute the flow. 
+
+Agent는 어떤 Component가 로딩되어 어떻게 연결되어 flow를 구성해야 되는지를 알아야 한다.
+
+This is done by listing the names of each of the sources, sinks and channels in the agent, and then specifying the connecting channel for each sink and source.
+
+각 source, sink, channel들의 이름을 열거하고 각 Sink와 Source간에 Channel의 연결을 지정
+
+ For example, an agent flows events from an Avro source called avroWeb to HDFS sink hdfs-cluster1 via a file channel called file-channel. 
+
+예를들어 avroWeb이란 이름의 Avro Source로부터 hdfs-cluster1이란 이름의 HDFS Sink로 file-channel이란 이름의 file channel을 통해 이벤트를 흘린다면
+
+The configuration file will contain names of these components and file-channel as a shared channel for both avroWeb source and hdfs-cluster1 sink.
+
+설정 파일은 이런 component들의 이름과 avroWeb Source와 hdfs-cluster1 sink 모두의 공유 channel로써의 file channel을 포함할 것임
+
+### Starting an agent
+
+```  ```
+
+
+### A simple example
+
+### Zookeeper based Configuration
+
+### Installing third-party plugins
+
+### The plugins.d directory
+
+### Directory layout for plugins
 
 
 ## Data ingestion
