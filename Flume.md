@@ -33,6 +33,9 @@ System Requirements
 
 ## Setting up an agent
 
+Java properties file format
+
+
 ## Data ingestion
 
 ## Setting multi-agent flow
