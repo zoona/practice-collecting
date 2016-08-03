@@ -219,15 +219,10 @@ In this example, we pass a Java option to force Flume to log to the console and 
 
 ```
 $ telnet localhost 44444
-
 Trying 127.0.0.1...
-
 Connected to localhost.localdomain (127.0.0.1).
-
 Escape character is '^]'.
-
 Hello world! <ENTER>
-
 OK
 ```
 
