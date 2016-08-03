@@ -55,30 +55,37 @@ Fan-in과 Fan-out, Contextual routing과 fail-over를 위한 백업 전송을 �
 
 ### Reliability
 
-The events are staged in a channel on each agent.
+이벤트는 각 Agent의 channel에 임시저장됨.
 
-The events are then delivered to the next agent or terminal repository \(like HDFS\) in the flow.
+이벤트는 flow의 다음 agent나 HDFS와 같은 종단 저장소로 전달됨.
 
-The events are removed from a channel only after they are stored in the channel of next agent or in the terminal repository.
+이벤트는 다음 agent의 channel이나 종단 저장소에 저장된 후에만 channel에서 삭제 됨.
 
-This is a how the single-hop message delivery semantics in Flume provide end-to-end reliability of the flow.
+이것이 Flume에서 단일 hop 메세지 전달 의미구조가 flow의 end-to-end 신뢰성을 제공하는 방식임.
 
-Flume uses a transactional approach to guarantee the reliable delivery of the events.
+Flume은 이벤트 전달의 신뢰를 보장하기 위해 트랜젝션 접근 방식을 사용함.
 
-The sources and sinks encapsulate in a transaction the storage\/retrieval, respectively, of the events placed in or provided by a transaction provided by the channel.
+The Sources and Sinks encapsulate the storage/retrieval of the Events in a Transaction provided by the Channel.
 
-This ensures that the set of events are reliably passed from point to point in the flow.
+source와 sink는 각각 이벤트의 쓰기/읽기가 channel이 제공하는 트랜젝션 안에 있음.
 
-In the case of a multi-hop flow, the sink from the previous hop and the source from the next hop both have their transactions running to ensure that the data is safely stored in the channel of the next hop.
+각각 source와 sink는 배치되거나 channel에 의해 제공된 트랜젝션에 의해 제공된 이벤트들의 저장/검색 트랜젝션이나 캡슐화한다.
+
+이것은 flow에서 이벤트셋이 포인트에서 포인트로 신뢰할 수 있게 지나가게 해줌.
+
+다중 hop flow의 경우, 이전 hop의 sink와 다음 hop의 source는 둘다 data가 안전하게 다음 hop의 channel에 저장하도록 하는 트랜젝션을 갖고 있음.
 
 ### Recoverability
 
 The events are staged in the channel, which manages recovery from failure.
 
+이벤트는 실패로부터 복구를 관리하는 channel에 임시 저장됨.
+
 Flume supports a durable file channel which is backed by the local file system.
 
-There’s also a memory channel which simply stores the events in an in-memory queue, which is faster but any events still left in the memory channel when an agent process dies can’t be recovered.
+Flume은 로컬 파일 시스템에 위치하는 내구성의 파일 channel을 지원함
 
+메모리 큐에 이벤트를 저장하지만 속도가 빠르지만 agent가 죽어 복구가 불가능할 때에도 여전히 메모리에 남겨지는 메모리 channel도 지원함
 
 # Setup
 
@@ -648,36 +655,120 @@ default channel이 없고, 설정된 channel도 없다면, selector는 이벤트
 ## Flume Sources
 
 ### Avro Source
+
+Avro port로 대기하고, 외부 Avro 클라이언트로부터 이벤트를 수신함.
+
+내장된 Avro Sink나 다른 Flume agent와 결합하면, 계층 컬렉션 토폴로지를 만들 수 있음.
+
 ### Thrift Source
+
+Thrift port로 대기하고, 외부 Thrift 클라이언트로부터 이벤트를 수신함.
+
+내장된 Thrift Sink나 다른 Flume agent와 결합하면, 계층 컬렉션 토폴로지를 만들 수 있음.
+
+Thrift source는 kerberos 인증을 활성화 해서 보안 모드에서 시작하도록 설정될 수 있음.
+
 ### Exec Source
+
+Exec source runs a given Unix command on start-up and expects that process to continuously produce data on standard out (stderr is simply discarded, unless property logStdErr is set to true). If the process exits for any reason, the source also exits and will produce no further data. This means configurations such as cat [named pipe] or tail -F [file] are going to produce the desired results where as date will probably not - the former two commands produce streams of data where as the latter produces a single event and exits.
+
 ### JMS Source
-### Converter
+
+JMS Source reads messages from a JMS destination such as a queue or topic. Being a JMS application it should work with any JMS provider but has only been tested with ActiveMQ. The JMS source provides configurable batch size, message selector, user/pass, and message to flume event converter. Note that the vendor provided JMS jars should be included in the Flume classpath using plugins.d directory (preferred), –classpath on command line, or via FLUME_CLASSPATH variable in flume-env.sh.
+
+  - Converter
+
+  The JMS source allows pluggable converters, though it’s likely the default converter will work for most purposes. The default converter is able to convert Bytes, Text, and Object messages to FlumeEvents. In all cases, the properties in the message are added as headers to the FlumeEvent.
+
+    - BytesMessage:
+      Bytes of message are copied to body of the FlumeEvent. Cannot convert more than 2GB of data per message.
+    - TextMessage:
+      Text of message is converted to a byte array and copied to the body of the FlumeEvent. The default converter uses UTF-8 by default but this is configurable.
+    - ObjectMessage:
+      Object is written out to a ByteArrayOutputStream wrapped in an ObjectOutputStream and the resulting array is copied to the body of the FlumeEvent.
+
 ### Spooling Directory Source
+
+This source lets you ingest data by placing files to be ingested into a “spooling” directory on disk. This source will watch the specified directory for new files, and will parse events out of new files as they appear. The event parsing logic is pluggable. After a given file has been fully read into the channel, it is renamed to indicate completion (or optionally deleted).
+
+Unlike the Exec source, this source is reliable and will not miss data, even if Flume is restarted or killed. In exchange for this reliability, only immutable, uniquely-named files must be dropped into the spooling directory. Flume tries to detect these problem conditions and will fail loudly if they are violated:
+
+If a file is written to after being placed into the spooling directory, Flume will print an error to its log file and stop processing.
+If a file name is reused at a later time, Flume will print an error to its log file and stop processing.
+To avoid the above issues, it may be useful to add a unique identifier (such as a timestamp) to log file names when they are moved into the spooling directory.
+
+Despite the reliability guarantees of this source, there are still cases in which events may be duplicated if certain downstream failures occur. This is consistent with the guarantees offered by other Flume components.
+
   - Event Deserializers
     - line
+      This deserializer generates one event per line of text input.
+
     - AVRO
+      This deserializer is able to read an Avro container file, and it generates one event per Avro record in the file. Each event is annotated with a header that indicates the schema used. The body of the event is the binary Avro record data, not including the schema or the rest of the container file elements.
+
+      Note that if the spool directory source must retry putting one of these events onto a channel (for example, because the channel is full), then it will reset and retry from the most recent Avro container file sync point. To reduce potential event duplication in such a failure scenario, write sync markers more frequently in your Avro input files.
+
     - BlobDeserializer
+      This deserializer reads a Binary Large Object (BLOB) per event, typically one BLOB per file. For example a PDF or JPG file. Note that this approach is not suitable for very large objects because the entire BLOB is buffered in RAM.
 
 ### Twitter 1% firehose Source (experimental)
+
+Experimental source that connects via Streaming API to the 1% sample twitter firehose, continously downloads tweets, converts them to Avro format and sends Avro events to a downstream Flume sink. Requires the consumer and access tokens and secrets of a Twitter developer account. Required properties are in bold.
+
 ### Kafka Source
+
+Kafka Source is an Apache Kafka consumer that reads messages from a Kafka topic. If you have multiple Kafka sources running, you can configure them with the same Consumer Group so each will read a unique set of partitions for the topic.
+
 ### NetCat Source
+
+A netcat-like source that listens on a given port and turns each line of text into an event. Acts like nc -k -l [host] [port]. In other words, it opens a specified port and listens for data. The expectation is that the supplied data is newline separated text. Each line of text is turned into a Flume event and sent via the connected channel.
+
 ### Sequence Generator Source
+
+A simple sequence generator that continuously generates events with a counter that starts from 0 and increments by 1. Useful mainly for testing.
+
 ### Syslog Sources
+
+Reads syslog data and generate Flume events. The UDP source treats an entire message as a single event. The TCP sources create a new event for each string of characters separated by a newline (‘n’).
+
   - Syslog TCP Source
+    The original, tried-and-true syslog TCP source.
+
   - Multiport Syslog TCP Source
+    This is a newer, faster, multi-port capable version of the Syslog TCP source. Note that the ports configuration setting has replaced port. Multi-port capability means that it can listen on many ports at once in an efficient manner. This source uses the Apache Mina library to do that. Provides support for RFC-3164 and many common RFC-5424 formatted messages. Also provides the capability to configure the character set used on a per-port basis.
+
   - Syslog UDP Source
 
 ### HTTP Source
+
+A source which accepts Flume Events by HTTP POST and GET. GET should be used for experimentation only. HTTP requests are converted into flume events by a pluggable “handler” which must implement the HTTPSourceHandler interface. This handler takes a HttpServletRequest and returns a list of flume events. All events handled from one Http request are committed to the channel in one transaction, thus allowing for increased efficiency on channels like the file channel. If the handler throws an exception, this source will return a HTTP status of 400. If the channel is full, or the source is unable to append events to the channel, the source will return a HTTP 503 - Temporarily unavailable status.
+
+All events sent in one post request are considered to be one batch and inserted into the channel in one transaction.
+
   - JSONHandler
+    A handler is provided out of the box which can handle events represented in JSON format, and supports UTF-8, UTF-16 and UTF-32 character sets. The handler accepts an array of events (even if there is only one event, the event has to be sent in an array) and converts them to a Flume event based on the encoding specified in the request. If no encoding is specified, UTF-8 is assumed. The JSON handler supports UTF-8, UTF-16 and UTF-32. Events are represented as follows.
+
   - BlobHandler
+    By default HTTPSource splits JSON input into Flume events. As an alternative, BlobHandler is a handler for HTTPSource that returns an event that contains the request parameters as well as the Binary Large Object (BLOB) uploaded with this request. For example a PDF or JPG file. Note that this approach is not suitable for very large objects because it buffers up the entire BLOB in RAM.
 
 ### Stress Source
+
+StressSource is an internal load-generating source implementation which is very useful for stress tests. It allows User to configure the size of Event payload, with empty headers. User can configure total number of events to be sent as well maximum number of Successful Event to be delivered.
+
 ### Legacy Sources
+
+The legacy sources allow a Flume 1.x agent to receive events from Flume 0.9.4 agents. It accepts events in the Flume 0.9.4 format, converts them to the Flume 1.0 format, and stores them in the connected channel. The 0.9.4 event properties like timestamp, pri, host, nanos, etc get converted to 1.x event header attributes. The legacy source supports both Avro and Thrift RPC connections. To use this bridge between two Flume versions, you need to start a Flume 1.x agent with the avroLegacy or thriftLegacy source. The 0.9.4 agent should have the agent Sink pointing to the host/port of the 1.x agent.
+
   - Avro Legacy Source
   - Thrift Legacy Source
 
 ### Custom Source
+
+A custom source is your own implementation of the Source interface. A custom source’s class and its dependencies must be included in the agent’s classpath when starting the Flume agent. The type of the custom source is its FQCN.
+
 ### Scribe Source
+
+Scribe is another type of ingest system. To adopt existing Scribe ingest system, Flume should use ScribeSource based on Thrift with compatible transfering protocol. For deployment of Scribe please follow the guide from Facebook. Required properties are in bold.
 
 ## Flume Sinks
 
