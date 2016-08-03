@@ -33,8 +33,6 @@ Flume source는 웹서버와 같은 외부 source에 의해 전달 된 이벤트
 
 예를들어 Avro 클라이언트나 Avro Sink로부터 온 이벤트를 보내는 Flow의 Flume Agent로부터 Avro 이벤트를 수신하는데에 Avro Flume Source가 쓰일 수 있다.
 
-A similar flow can be defined using a Thrift Flume Source to receive events from a Thrift Sink or a Flume Thrift Rpc Client or Thrift clients written in any language generated from the Flume thrift protocol.
-
 Thrift 프로토콜도 마찬가지
 
 When a Flume source receives an event, it stores it into one or more channels.
@@ -45,13 +43,7 @@ The channel is a passive store that keeps the event until it’s consumed by a F
 
 Channel은 Flume Sink에 의해 소비될 때 까지 이벤트를 저장한다.
 
-The file channel is one example – it is backed by the local filesystem.
-
-The sink removes the event from the channel and puts it into an external repository like HDFS \(via Flume HDFS sink\) or forwards it to the Flume source of the next Flume agent \(next hop\) in the flow. 
-
 Sink는 Channel에서 이벤트를 가져와 HDFS와 같은 외부 저장소나 flow의 다음 Flume Source로 보낸다.
-
-The source and sink within the given agent run asynchronously with the events staged in the channel.
 
 Agent의 Source와 Sink는 Channel에 저장 된 이벤트들과 비동기로 실행 된다.
 
@@ -102,17 +94,11 @@ Java Properties 형식을 따름
 
 ### Configuring individual components
 
-Each component (source, sink or channel) in the flow has a name, type, and set of properties that are specific to the type and instantiation. 
-
 각 Component(Source, Sink, Channel)는 종류와, 인스턴스를 정의하는 name, type, property들을 갖음
-
-For example, an Avro source needs a hostname (or IP address) and a port number to receive data from. 
 
 예를들어 Avro Source는 데이터 수신을 위한 hostname과 port number가 필요함
 
-A memory channel can have max queue size (“capacity”), and an HDFS sink needs to know the file system URI, path to create files, frequency of file rotation (“hdfs.rollInterval”) etc.
-
-메모리 채널은 최대 큐 사이즈를 지정할 수 있고, HDFS Sink는 파일시스템 URI와 파일을 생성할 경로, 파일 로테이션 주기 등이 필요함
+메모리 채널은 최대 큐 사이즈("capacity")를 지정할 수 있고, HDFS Sink는 파일시스템 URI와 파일을 생성할 경로, 파일 로테이션 주기("hdfs.rollInterval") 등이 필요함
 
 All such attributes of a component needs to be set in the properties file of the hosting Flume agent.
 
