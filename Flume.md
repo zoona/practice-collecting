@@ -233,6 +233,8 @@ Flume이 실행 된 터미널에서는 아래와 같이 로그가 찍힌다.
 12/06/19 15:32:34 INFO sink.LoggerSink: Event: { headers:{} body: 48 65 6C 6C 6F 20 77 6F 72 6C 64 21 0D Hello world!. }
 ```
 
+
+
 ### Zookeeper based Configuration
 
 ### Installing third-party plugins
