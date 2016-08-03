@@ -209,7 +209,7 @@ Note that in a full deployment we would typically include one more option: --con
 
 The <conf-dir> directory would include a shell script flume-env.sh and potentially a log4j properties file. 
 
-실제 배포시에는 `--conf=<conf-dir>` 옵션을
+실제 배포시에는 `--conf=<conf-dir>` 옵션을 추가하는데 `flume-env.sh'를 포함하고, log4j 속성 파일이 포함된 디렉토리를 지정한다.
 
 In this example, we pass a Java option to force Flume to log to the console and we go without a custom environment script.
 
