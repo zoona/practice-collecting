@@ -213,6 +213,23 @@ The <conf-dir> directory would include a shell script flume-env.sh and potential
 
 In this example, we pass a Java option to force Flume to log to the console and we go without a custom environment script.
 
+예제에서는 콘솔에 로깅하고, 커스텀 환경 스크립트 없이 실행하도록 Java 옵션을 넘겼다.
+
+다른 터미널에서 텔넷 포트 44444로 접속 할 수 있고, Flume에 이벤트를 보낼 수 있다.
+
+```
+$ telnet localhost 44444
+
+Trying 127.0.0.1...
+
+Connected to localhost.localdomain (127.0.0.1).
+
+Escape character is '^]'.
+
+Hello world! <ENTER>
+
+OK
+```
 
 ### Zookeeper based Configuration
 
