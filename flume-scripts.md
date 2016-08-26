@@ -28,6 +28,32 @@ Basic Flume agent configuration
 
 ## Sources
 
+### Sequence Generator Source
+
+``` properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = seq
+a1.sources.r1.channels = c1
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+```
+
+```shell
+
+../bin/flume-ng agent -c . -f ./seq.conf -name a1 -Dflume.root.logger=INFO,console
+
+```
+
 ### Exec Source
 
 ``` properties
@@ -54,8 +80,6 @@ a1.sinks.s1.channel = c1
 ../bin/flume-ng agent -c . -f ./exec.conf -name a1 -Dflume.root.logger=INFO,console
 
 ```
-
-### Sequence Generator Source
 
 ### Syslog TCP Source
 
