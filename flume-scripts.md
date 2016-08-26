@@ -50,7 +50,7 @@ a1.sinks.s1.channel = c1
 
 ```shell
 
-../bin/flume-ng agent -c . -f ./seq.conf -name a1 -Dflume.root.logger=INFO,console
+./bin/flume-ng agent -c ./conf -f ./conf/seq.conf -name a1 -Dflume.root.logger=INFO,console
 
 ```
 
@@ -75,9 +75,16 @@ a1.sinks.s1.channel = c1
 
 ```
 
-```sh
+```shell
 
-../bin/flume-ng agent -c . -f ./exec.conf -name a1 -Dflume.root.logger=INFO,console
+./bin/flume-ng agent -c ./conf -f ./conf/exec.conf -name a1 -Dflume.root.logger=INFO,console
+
+```
+
+```shell
+
+echo hello >> /root/var/data/log
+echo flume >> /root/var/data/log
 
 ```
 
@@ -103,3 +110,20 @@ a1.sinks.s1.channel = c1
 
 ```
 
+```shell
+
+./bin/flume-ng agent -c ./conf -f ./conf/syslogtcp.conf -name a1 -Dflume.root.logger=INFO,console
+
+```
+
+```
+vi /etc/rsyslog.conf
+```
+
+```properties
+*.* @@localhost:5140
+```
+
+```shell
+logger hello flume
+```
