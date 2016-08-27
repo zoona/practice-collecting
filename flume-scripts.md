@@ -159,3 +159,12 @@ a1.sinks.s1.channel = c1
 echo hello >> /root/var/flumespool/data1.txt
 
 ```
+
+### Custom Source
+
+```java
+```
+
+```properties
+```
+
