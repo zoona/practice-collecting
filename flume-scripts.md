@@ -101,7 +101,7 @@ a1.sources.r1.port = 5140
 a1.sources.r1.host = localhost
 a1.sources.r1.channels = c1
 
-a1.channels.c1.type = memory
+a1.channels.c1.type = memory 
 a1.channels.c1.capacity = 1000
 a1.channels.c1.transactionCapacity = 100
 
@@ -126,4 +126,36 @@ vi /etc/rsyslog.conf
 
 ```shell
 logger hello flume
+```
+
+### Spooling Directory Source
+
+Unlike the Exec source, this source is reliable and will not miss data, even if Flume is restarted or killed. In exchange for this reliability, only immutable, uniquely-named files must be dropped into the spooling directory. Flume tries to detect these problem conditions and will fail loudly if they are violated:
+
+
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+
+a1.sources.r1.type = spooldir
+a1.sources.r1.spoolDir = /root/var/flumespool
+a1.sources.r1.fileHeader = true
+a1.sources.r1.channels = c1
+
+a1.channels.c1.type = memory 
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+```
+
+```shell
+
+echo hello >> /root/var/flumespool/data1.txt
+
 ```
