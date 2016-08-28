@@ -238,9 +238,79 @@ a1.sinks.s1.serializer.fieldnames =id,,msg
 
 ### Logger Sink
 
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.channels = c1
+a1.sinks = s1
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+```
+
 ### Avro Sink
 
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.sinks.s1.type = avro
+a1.sinks.s1.channel = c1
+a1.sinks.s1.hostname = localhost
+a1.sinks.s1.port = 4545
+
+```
+
 ### File Roll Sink
+
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.sinks.s1.type = file_roll
+a1.sinks.s1.channel = c1
+a1.sinks.s1.sink.directory = /root/var/flume/fileroll
+
+```
+
+```shell
+mkdir -p /root/var/flume/fileroll
+```
+
 
 ### Kafka Sink
 
