@@ -155,7 +155,7 @@ a1.sinks.s1.channel = c1
 ```
 
 ```shell
-
+mkdir -p /root/var/flumespool
 echo hello >> /root/var/flumespool/data1.txt
 
 ```
@@ -168,3 +168,78 @@ echo hello >> /root/var/flumespool/data1.txt
 ```properties
 ```
 
+## Channel
+
+### Kafka Channel
+
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1
+
+a1.channels.c1.type   = org.apache.flume.channel.kafka.KafkaChannel
+a1.channels.c1.capacity = 10000
+a1.channels.c1.transactionCapacity = 1000
+a1.channels.c1.brokerList=sandbox.hortonworks.com:6667
+a1.channels.c1.topic=flumechannel
+a1.channels.c1.zookeeperConnect=localhost:2181
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+```
+
+## File Channel
+
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1
+
+a1.channels = c1
+a1.channels.c1.type = file
+a1.channels.c1.checkpointDir = /root/var/flume/checkpoint
+a1.channels.c1.dataDirs = /root/var/flume/data
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+```
+
+## Spillable Memory Channel
+
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1
+
+a1.channels = c1
+a1.channels.c1.type = SPILLABLEMEMORY
+a1.channels.c1.memoryCapacity = 10000
+a1.channels.c1.overflowCapacity = 1000000
+a1.channels.c1.byteCapacity = 800000
+a1.channels.c1.checkpointDir = /root/var/flume/checkpoint
+a1.channels.c1.dataDirs = /root/var/flume/data
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+```
