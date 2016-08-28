@@ -168,7 +168,73 @@ echo hello >> /root/var/flumespool/data1.txt
 ```properties
 ```
 
+## Sink
+
+### HDFS Sink
+
+### Logger Sink
+
+### Avro Sink
+
+### File Roll Sink
+
+### Kafka Sink
+
+### Custom Sink
+
+
 ## Channel
+
+### Memory Channel
+
+### File Channel
+
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1
+
+a1.channels = c1
+a1.channels.c1.type = file
+a1.channels.c1.checkpointDir = /root/var/flume/checkpoint
+a1.channels.c1.dataDirs = /root/var/flume/data
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+```
+
+### Spillable Memory Channel
+
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1
+
+a1.channels = c1
+a1.channels.c1.type = SPILLABLEMEMORY
+a1.channels.c1.memoryCapacity = 10000
+a1.channels.c1.overflowCapacity = 1000000
+a1.channels.c1.byteCapacity = 800000
+a1.channels.c1.checkpointDir = /root/var/flume/checkpoint
+a1.channels.c1.dataDirs = /root/var/flume/data
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+```
 
 ### Kafka Channel
 
@@ -195,51 +261,40 @@ a1.sinks.s1.channel = c1
 
 ```
 
-## File Channel
+## Channel Selectors
 
-```properties
+### Replicating
 
-a1.sources = r1
-a1.channels = c1
-a1.sinks = s1
+### Multiplexing
 
-a1.sources.r1.type = syslogtcp
-a1.sources.r1.port = 5140
-a1.sources.r1.host = localhost
-a1.sources.r1.channels = c1
+## Sink Processors
 
-a1.channels = c1
-a1.channels.c1.type = file
-a1.channels.c1.checkpointDir = /root/var/flume/checkpoint
-a1.channels.c1.dataDirs = /root/var/flume/data
+### Failover Sink Processor
 
-a1.sinks.s1.type = logger
-a1.sinks.s1.channel = c1
+### Load balancing Sink Processor
 
-```
+### Custom Sink Processor
 
-## Spillable Memory Channel
+## Event Serilizers
 
-```properties
+### Body Text Serializer
 
-a1.sources = r1
-a1.channels = c1
-a1.sinks = s1
+### Avro Event Serializer
 
-a1.sources.r1.type = syslogtcp
-a1.sources.r1.port = 5140
-a1.sources.r1.host = localhost
-a1.sources.r1.channels = c1
+## Interceptors
 
-a1.channels = c1
-a1.channels.c1.type = SPILLABLEMEMORY
-a1.channels.c1.memoryCapacity = 10000
-a1.channels.c1.overflowCapacity = 1000000
-a1.channels.c1.byteCapacity = 800000
-a1.channels.c1.checkpointDir = /root/var/flume/checkpoint
-a1.channels.c1.dataDirs = /root/var/flume/data
+### Timestamp Interceptor
 
-a1.sinks.s1.type = logger
-a1.sinks.s1.channel = c1
+### Host Interceptor
 
-```
+### Static Interceptor
+
+### UUID Interceptor
+
+### Morphline Interceptor
+
+### Search and Replace Interceptor
+
+### Regex Filtering Interceptor
+
+### Regex Extractor Interceptor
