@@ -171,6 +171,70 @@ echo hello >> /root/var/flumespool/data1.txt
 ## Sink
 
 ### HDFS Sink
+http://flume.apache.org/FlumeUserGuide.html#hdfs-sink
+
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.sinks.s1.type = hdfs
+a1.sinks.s1.channel = c1
+a1.sinks.s1.hdfs.path = /flume/events/%y-%m-%d/%H%M/
+a1.sinks.s1.hdfs.filePrefix = events-
+a1.sinks.s1.hdfs.fileType = DataStream
+a1.sinks.s1.hdfs.round = true
+a1.sinks.s1.hdfs.roundValue = 10
+a1.sinks.s1.hdfs.roundUnit = minute
+
+```
+
+### Hive Sink
+http://flume.apache.org/FlumeUserGuide.html#hive-sink
+
+```properteis
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.sinks = s1
+a1.sinks.s1.type = hive
+a1.sinks.s1.channel = c1
+a1.sinks.s1.hive.metastore = thrift://127.0.0.1:9083
+a1.sinks.s1.hive.database = default
+a1.sinks.s1.hive.table = weblogs
+a1.sinks.s1.hive.partition = asia,%{country},%y-%m-%d-%H-%M
+a1.sinks.s1.useLocalTimeStamp = false
+a1.sinks.s1.round = true
+a1.sinks.s1.roundValue = 10
+a1.sinks.s1.roundUnit = minute
+a1.sinks.s1.serializer = DELIMITED
+a1.sinks.s1.serializer.delimiter = "\t"
+a1.sinks.s1.serializer.serdeSeparator = '\t'
+a1.sinks.s1.serializer.fieldnames =id,,msg
+
+
+```
 
 ### Logger Sink
 
