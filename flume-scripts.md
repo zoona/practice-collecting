@@ -587,6 +587,39 @@ a1.sinks.s2.channel = c1
 
 ### Load balancing Sink Processor
 
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1 s2
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1
+
+a1.sinkgroups = g1
+a1.sinkgroups.g1.sinks = s1 s2
+a1.sinkgroups.g1.processor.type = load_balance
+a1.sinkgroups.g1.processor.backoff = true
+a1.sinkgroups.g1.processor.selector = round_robin
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+a1.sinks.s2.type = org.apache.flume.sink.kafka.KafkaSink
+a1.sinks.s2.topic = mytopic
+a1.sinks.s2.brokerList = sandbox.hortonworks.com:6667
+a1.sinks.s2.requiredAcks = 1
+a1.sinks.s2.batchSize = 20
+a1.sinks.s2.channel = c1
+
+```
+
 ### Custom Sink Processor
 
 ## Event Serilizers
@@ -599,7 +632,54 @@ a1.sinks.s2.channel = c1
 
 ### Timestamp Interceptor
 
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = exec
+a1.sources.r1.command = tail -f /root/var/data.log
+a1.sources.r1.channels = c1
+
+a1.sources.r1.interceptors = i1
+a1.sources.r1.interceptors.i1.type = timestamp
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+```
+
 ### Host Interceptor
+
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = exec
+a1.sources.r1.command = tail -f /root/var/data.log
+a1.sources.r1.channels = c1
+
+a1.sources.r1.interceptors = i1 i2
+a1.sources.r1.interceptors.i1.type = timestamp
+
+a1.sources.r1.interceptors.i2.type = host
+a1.sources.r1.interceptors.i2.hostHeader = hostname
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+```
 
 ### Static Interceptor
 
