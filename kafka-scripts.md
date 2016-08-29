@@ -75,18 +75,6 @@ bin/kafka-console-producer.sh \
   --topic test
 ```
 
-### create with replication num 2
-
-```bash
-
-```
-
-### create with partition num 3
-
-```bash
-
-```
-
 ## 5. Multi Broker
 
 ### config 수정
