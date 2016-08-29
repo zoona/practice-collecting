@@ -319,12 +319,61 @@ mkdir -p /root/var/flume/fileroll
 /usr/hdp/current/kafka-broker/bin/kafka-console-consumer.sh --topic mytopic --zookeeper localhost:2181
 
 ```
+
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.sinks.s1.type = org.apache.flume.sink.kafka.KafkaSink
+a1.sinks.s1.topic = mytopic
+a1.sinks.s1.brokerList = sandbox.hortonworks.com:6667
+a1.sinks.s1.requiredAcks = 1
+a1.sinks.s1.batchSize = 20
+a1.sinks.s1.channel = c1
+
+```
+
 ### Custom Sink
 
 
 ## Channel
 
 ### Memory Channel
+
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.sinks.s1.type = org.apache.flume.sink.kafka.KafkaSink
+a1.sinks.s1.topic = mytopic
+a1.sinks.s1.brokerList = sandbox.hortonworks.com:6667
+a1.sinks.s1.requiredAcks = 1
+a1.sinks.s1.batchSize = 20
+a1.sinks.s1.channel = c1
+
+```
 
 ### File Channel
 
@@ -403,6 +452,46 @@ a1.sinks.s1.channel = c1
 ## Channel Selectors
 
 ### Replicating
+
+```properties
+a1.sources = r1
+a1.channels = c1 c2 c3
+a1.sinks = s1 s2 s3
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+
+a1.sources.r1.selector.type = replicating
+a1.sources.r1.channels = c1 c2 c3
+a1.sources.r1.selector.optional = c3
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.channels.c2.type = memory
+a1.channels.c2.capacity = 1000
+a1.channels.c2.transactionCapacity = 100
+
+a1.channels.c3.type = memory
+a1.channels.c3.capacity = 1000
+a1.channels.c3.transactionCapacity = 100
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+a1.sinks.s2.type = org.apache.flume.sink.kafka.KafkaSink
+a1.sinks.s2.topic = mytopic
+a1.sinks.s2.brokerList = sandbox.hortonworks.com:6667
+a1.sinks.s2.requiredAcks = 1
+a1.sinks.s2.batchSize = 20
+a1.sinks.s2.channel = c2
+
+a1.sinks.s3.type = file_roll
+a1.sinks.s3.sink.directory = /root/var/flume/fileroll
+a1.sinks.s3.channel = c3
+```
 
 ### Multiplexing
 
