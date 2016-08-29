@@ -495,9 +495,95 @@ a1.sinks.s3.channel = c3
 
 ### Multiplexing
 
+```properties
+
+a1.sources = r1
+a1.channels = c1 c2 c3 c4
+a1.sinks = s1 s2 s3 s4
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1 c2 c3 c4
+
+a1.sources.r1.selector.type = multiplexing
+a1.sources.r1.selector.header = GENDER
+a1.sources.r1.selector.mapping.M = c1
+a1.sources.r1.selector.mapping.F = c2 c3
+a1.sources.r1.selector.default = c4
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.channels.c2.type = memory
+a1.channels.c2.capacity = 1000
+a1.channels.c2.transactionCapacity = 100
+
+a1.channels.c3.type = memory
+a1.channels.c3.capacity = 1000
+a1.channels.c3.transactionCapacity = 100
+
+a1.channels.c4.type = memory
+a1.channels.c4.capacity = 1000
+a1.channels.c4.transactionCapacity = 100
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+a1.sinks.s2.type = org.apache.flume.sink.kafka.KafkaSink
+a1.sinks.s2.topic = mytopic
+a1.sinks.s2.brokerList = sandbox.hortonworks.com:6667
+a1.sinks.s2.requiredAcks = 1
+a1.sinks.s2.batchSize = 20
+a1.sinks.s2.channel = c2
+
+a1.sinks.s3.type = file_roll
+a1.sinks.s3.sink.directory = /root/var/flume/fileroll
+a1.sinks.s3.channel = c3
+
+a1.sinks.s4.type = logger
+a1.sinks.s4.channel = c4
+
+```
+
 ## Sink Processors
 
 ### Failover Sink Processor
+
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1 s2
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1
+
+a1.sinkgroups = g1
+a1.sinkgroups.g1.sinks = s1 s2
+a1.sinkgroups.g1.processor.type = failover
+a1.sinkgroups.g1.processor.priority.s1 = 10
+a1.sinkgroups.g1.processor.priority.s2 = 5
+a1.sinkgroups.g1.processor.maxpenalty = 10000
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+a1.sinks.s2.type = org.apache.flume.sink.kafka.KafkaSink
+a1.sinks.s2.topic = mytopic
+a1.sinks.s2.brokerList = sandbox.hortonworks.com:6667
+a1.sinks.s2.requiredAcks = 1
+a1.sinks.s2.batchSize = 20
+a1.sinks.s2.channel = c1
+
+```
 
 ### Load balancing Sink Processor
 
