@@ -683,11 +683,85 @@ a1.sinks.s1.channel = c1
 
 ### Static Interceptor
 
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = exec
+a1.sources.r1.command = tail -f /root/var/data.log
+a1.sources.r1.channels = c1
+
+a1.sources.r1.interceptors = i1
+a1.sources.r1.interceptors.i1.type = static
+a1.sources.r1.interceptors.i1.key = GENDER
+a1.sources.r1.interceptors.i1.value = M
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+```
+
 ### UUID Interceptor
+
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1
+
+a1.sources.r1.interceptors = i1
+a1.sources.r1.interceptors.i1.type = org.apache.flume.sink.solr.morphline.UUIDInterceptor$Builder
+a1.sources.r1.interceptors.i1.headerName = uuid
+a1.sources.r1.interceptors.i1.prefix = C
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+```
 
 ### Morphline Interceptor
 
 ### Search and Replace Interceptor
+
+```properties
+
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = syslogtcp
+a1.sources.r1.port = 5140
+a1.sources.r1.host = localhost
+a1.sources.r1.channels = c1
+
+a1.sources.r1.interceptors = i1
+a1.sources.r1.interceptors.i1.type = search_replace
+a1.sources.r1.interceptors.i1.searchPattern = apple
+a1.sources.r1.interceptors.i1.replaceString = banana
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
+
+```
 
 ### Regex Filtering Interceptor
 
