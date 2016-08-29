@@ -314,6 +314,11 @@ mkdir -p /root/var/flume/fileroll
 
 ### Kafka Sink
 
+```shell
+
+/usr/hdp/current/kafka-broker/bin/kafka-console-consumer.sh --topic mytopic --zookeeper localhost:2181
+
+```
 ### Custom Sink
 
 
