@@ -199,6 +199,11 @@ bin/kafka-run-class.sh \
   --partition 0
 ```
 
+### Kafka Manager
+
+https://github.com/yahoo/kafka-manager
+
+
 ### quantifind/KafkaOffsetMonitor
 
 [https://github.com/quantifind/KafkaOffsetMonitor](https://github.com/quantifind/KafkaOffsetMonitor)
