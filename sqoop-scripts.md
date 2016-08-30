@@ -1,5 +1,6 @@
 # Logstash Scripts
 
+## Install Logstash
 ```
 wget https://download.elastic.co/logstash/logstash/logstash-2.3.4.tar.gz
 tar xvfz logstash-2.3.4.tar.gz
@@ -9,6 +10,18 @@ cd logstash-2.3.4
 ```
 bin/logstash -e 'input { stdin { } } output { stdout {} }'
 hello
+```
+
+## Install Elasticsearch
+
+```
+curl https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.3.5/elasticsearch-2.3.5.tar.gz
+tar xvfz elasticsearch-2.3.5.tar.gz
+```
+
+## Install Kibana
+```
+curl https://download.elastic.co/kibana/kibana/kibana-4.5.4-linux-x64.tar.gz
 ```
 
 ## Skeleton
