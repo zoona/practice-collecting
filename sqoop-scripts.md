@@ -17,6 +17,11 @@ hello
 ```
 curl https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.3.5/elasticsearch-2.3.5.tar.gz
 tar xvfz elasticsearch-2.3.5.tar.gz
+cd elasticsearch-2.3.5
+```
+
+```
+./bin/elasticsearch -Des.insecure.allow.root=true
 ```
 
 ## Install Kibana
