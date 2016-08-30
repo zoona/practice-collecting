@@ -54,9 +54,9 @@ bin/kafka-topics.sh \
   --zookeeper localhost:2181
 ```
 
-## 3. Producer
+## 3. Consumer
 
-### send message
+### consume
 
 ```bash
 bin/kafka-console-consumer.sh \
@@ -65,9 +65,9 @@ bin/kafka-console-consumer.sh \
   --from-beginning
 ```
 
-## 4. Consumer
+## 4. Producer
 
-### consume
+### send message
 
 ```bash
 bin/kafka-console-producer.sh \
@@ -187,10 +187,58 @@ bin/kafka-run-class.sh \
   --partition 0
 ```
 
+### Kafka Monitor
+
+```
+git clone https://github.com/linkedin/kafka-monitor.git
+cd kafka-monitor
+```
+
+```
+./gradlew jar
+```
+
+```
+./bin/kafka-monitor-start.sh config/kafka-monitor.properties
+```
+
+```
+./bin/end-to-end-test.sh --topic test --broker-list localhost:9092 --zookeeper localhost:2181
+```
+
+```
+vi config/kafka-monitor.properties
+```
+
+```
+"jetty-service": {
+    "class.name": "com.linkedin.kmf.services.JettyService",
+    "jetty.port": 8989
+  },
+```
+
+
 ### Kafka Manager
 
 https://github.com/yahoo/kafka-manager
 
+```
+git clone https://github.com/yahoo/kafka-manager.git
+cd kafka-manager
+```
+
+```
+vi conf/application.conf
+kafka-manager.zkhosts="localhost:2181"
+```
+
+```
+./sbt clean dist
+```
+
+```
+$ bin/kafka-manager -Dconfig.file=/path/to/application.conf -Dhttp.port=8990
+```
 
 ### quantifind/KafkaOffsetMonitor
 
