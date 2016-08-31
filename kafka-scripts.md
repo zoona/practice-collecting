@@ -3,33 +3,31 @@
 ## 1. Kafka 설치
 
 ### 다운로드
-```bash
-wget http://apache.tt.co.kr/kafka/0.10.0.1/kafka_2.10-0.10.0.1.tgz
+```shell
+$ wget http://apache.tt.co.kr/kafka/0.10.0.1/kafka_2.10-0.10.0.1.tgz
 ```
 
 ### 압축해제
-```bash
-tar -xvzf kafka_2.10-0.10.0.1.tgz
-cd kafka_2.10-0.10.0.1
+```shell
+$ tar -xvzf kafka_2.10-0.10.0.1.tgz
+$ cd kafka_2.10-0.10.0.1
 ```
 
 ### zookeeper 실행
-
-```bash
-bin/zookeeper-server-start.sh config/zookeeper.properties
+```shell
+$ bin/zookeeper-server-start.sh config/zookeeper.properties
 ```
 
 ### kafka server 실행
-```bash
-bin/kafka-server-start.sh config/server.properties
+```shell
+$ bin/kafka-server-start.sh config/server.properties
 ```
 
 ## 2. Topic
 
 ### create
-
-```bash
-bin/kafka-topics.sh \
+```shell
+$ bin/kafka-topics.sh \
   --create \
   --zookeeper localhost:2181 \
   --replication-factor 1 \
@@ -38,17 +36,15 @@ bin/kafka-topics.sh \
 ```
 
 ### list
-
-```bash
-bin/kafka-topics.sh \
+```shell
+$ bin/kafka-topics.sh \
   --list \
   --zookeeper localhost:2181
 ```
 
 ### describe
-
-```bash
-bin/kafka-topics.sh \
+```shell
+$ bin/kafka-topics.sh \
   --describe \
   --topic test \
   --zookeeper localhost:2181
@@ -57,9 +53,8 @@ bin/kafka-topics.sh \
 ## 3. Consumer
 
 ### consume
-
-```bash
-bin/kafka-console-consumer.sh \
+```shell
+$ bin/kafka-console-consumer.sh \
   --zookeeper localhost:2181 \
   --topic test \
   --from-beginning
@@ -68,9 +63,8 @@ bin/kafka-console-consumer.sh \
 ## 4. Producer
 
 ### send message
-
-```bash
-bin/kafka-console-producer.sh \
+```shell
+$ bin/kafka-console-producer.sh \
   --broker-list localhost:9092 \
   --topic test
 ```
@@ -78,13 +72,12 @@ bin/kafka-console-producer.sh \
 ## 5. Multi Broker
 
 ### config 수정
-
-```bash
-cp config/server.properties config/server-1.properties
-cp config/server.properties config/server-2.properties
+```shell
+$ cp config/server.properties config/server-1.properties
+$ cp config/server.properties config/server-2.properties
 ```
 
-```
+```properties
 config/server-1.properties:
     broker.id=1
     port=9093
@@ -100,15 +93,15 @@ config/server-2.properties:
 
 ### start node
 
-```
-bin/kafka-server-start.sh config/server-1.properties
-bin/kafka-server-start.sh config/server-2.properties
+```shell
+$ bin/kafka-server-start.sh config/server-1.properties
+$ bin/kafka-server-start.sh config/server-2.properties
 ```
 
 ### create topic
 
-```bash
-bin/kafka-topics.sh \
+```shell
+$ bin/kafka-topics.sh \
   --create \
   --zookeeper localhost:2181 \
   --replication-factor 3 \
@@ -118,8 +111,8 @@ bin/kafka-topics.sh \
 
 ### describe topic
 
-```bash
-bin/kafka-topics.sh \
+```shell
+$ bin/kafka-topics.sh \
   --describe \
   --zookeeper localhost:2181 \
   --topic my-replicated-topic
@@ -129,16 +122,16 @@ bin/kafka-topics.sh \
 
 ### kill process
 
-```bash
-ps -ef | grep server-1
+```shell
+$ ps -ef | grep server-1
 
-kill `process id`
+$ kill `process id`
 ```
 
 ### describe topic
 
-```bash
-bin/kafka-topics.sh \
+```shell
+$ bin/kafka-topics.sh \
   --describe \
   --zookeeper localhost:2181 \
   --topic my-replicated-topic
@@ -146,8 +139,8 @@ bin/kafka-topics.sh \
 
 ### consume
 
-```bash
-bin/kafka-console-consumer.sh \
+```shell
+$ bin/kafka-console-consumer.sh \
   --zookeeper localhost:2181 \
   --topic my-replicated-topic \
   --from-beginning
@@ -159,8 +152,8 @@ bin/kafka-console-consumer.sh \
 
 ConsumerOffsetChecker
 
-```bash
-bin/kafka-run-class.sh \
+```shell
+$ bin/kafka-run-class.sh \
   kafka.tools.ConsumerOffsetChecker \
   --broker-info localhost:9092 \
   --zookeeper localhost:2181 \
@@ -169,8 +162,8 @@ bin/kafka-run-class.sh \
 
 GetOffsetShell
 
-```bash
-bin/kafka-run-class.sh \
+```shell
+$ bin/kafka-run-class.sh \
   kafka.tools.GetOffsetShell \
   --broker-list localhost:9092 \
   --topic test \
@@ -179,8 +172,8 @@ bin/kafka-run-class.sh \
 
 SimpleConsumerShell
 
-```bash
-bin/kafka-run-class.sh \
+```shell
+$ bin/kafka-run-class.sh \
   kafka.tools.SimpleConsumerShell \
   --broker-list localhost:9092 \
   --topic test \
@@ -190,7 +183,7 @@ bin/kafka-run-class.sh \
 ### Kafka Monitor
 
 ```
-git clone https://github.com/linkedin/kafka-monitor.git
+$ git clone https://github.com/linkedin/kafka-monitor.git
 cd kafka-monitor
 ```
 
@@ -199,18 +192,18 @@ cd kafka-monitor
 ```
 
 ```
-./bin/kafka-monitor-start.sh config/kafka-monitor.properties
+$ ./bin/kafka-monitor-start.sh config/kafka-monitor.properties
 ```
 
 ```
-./bin/end-to-end-test.sh --topic test --broker-list localhost:9092 --zookeeper localhost:2181
+$ ./bin/end-to-end-test.sh --topic test --broker-list localhost:9092 --zookeeper localhost:2181
 ```
 
 ```
-vi config/kafka-monitor.properties
+$ vi config/kafka-monitor.properties
 ```
 
-```
+```properties
 "jetty-service": {
     "class.name": "com.linkedin.kmf.services.JettyService",
     "jetty.port": 8989
@@ -222,38 +215,42 @@ vi config/kafka-monitor.properties
 
 https://github.com/yahoo/kafka-manager
 
-```
-git clone https://github.com/yahoo/kafka-manager.git
-cd kafka-manager
+```shell
+$ git clone https://github.com/yahoo/kafka-manager.git
+$ cd kafka-manager
 ```
 
+```shell
+$ vi conf/application.conf
 ```
-vi conf/application.conf
+
+```properties
 kafka-manager.zkhosts="localhost:2181"
 ```
 
-```
-./sbt clean dist
-```
-
-```
-$ bin/kafka-manager -Dconfig.file=/path/to/application.conf -Dhttp.port=8990
+```shell
+$ ./sbt clean dist
 ```
 
-### quantifind/KafkaOffsetMonitor
+```
+$ bin/kafka-manager -Dconfig.file=/path/to/application.conf \
+-Dhttp.port=8990
+```
+
+### KafkaOffsetMonitor
 
 [https://github.com/quantifind/KafkaOffsetMonitor](https://github.com/quantifind/KafkaOffsetMonitor)
 
 ### 다운로드
 
-```bash
-wget https://github.com/quantifind/KafkaOffsetMonitor/releases/download/v0.2.1/KafkaOffsetMonitor-assembly-0.2.1.jar
+```shell
+$ wget https://github.com/quantifind/KafkaOffsetMonitor/releases/download/v0.2.1/KafkaOffsetMonitor-assembly-0.2.1.jar
 ```
 
 ### 실행
 
-```bash
-java -cp KafkaOffsetMonitor-assembly-0.2.1.jar \
+```shell
+$ java -cp KafkaOffsetMonitor-assembly-0.2.1.jar \
   com.quantifind.kafka.offsetapp.OffsetGetterWeb \
   --zk localhost:2181 \
   --port 9991 \

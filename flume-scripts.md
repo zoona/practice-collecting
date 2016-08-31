@@ -3,7 +3,6 @@
 Basic Flume agent configuration
 
 ```properties
-
 # list the sources, sinks and channels for the agent
 <Agent>.sources = <Source>
 <Agent>.sinks = <Sink>
@@ -23,7 +22,6 @@ Basic Flume agent configuration
 
 # properties for sinks
 <Agent>.sources.<Sink>.<someProperty> = <someValue>
-
 ```
 
 ## Sources
@@ -31,7 +29,6 @@ Basic Flume agent configuration
 ### Sequence Generator Source
 
 ``` properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
@@ -45,19 +42,23 @@ a1.channels.c1.transactionCapacity = 100
 
 a1.sinks.s1.type = logger
 a1.sinks.s1.channel = c1
-
 ```
 
 ```shell
-
-./bin/flume-ng agent -c ./conf -f ./conf/seq.conf -name a1 -Dflume.root.logger=INFO,console
-
+$ ./bin/flume-ng agent -c ./conf -f ./conf/seq.conf -name a1
+$ ls logs
+$ tail -100f logs/flume.log
 ```
+
+```shell
+$ ./bin/flume-ng agent -c ./conf -f ./conf/seq.conf -name a1 \
+-Dflume.root.logger=INFO,console
+```
+
 
 ### Exec Source
 
 ``` properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
@@ -72,26 +73,20 @@ a1.channels.c1.transactionCapacity = 100
 
 a1.sinks.s1.type = logger
 a1.sinks.s1.channel = c1
-
 ```
 
 ```shell
-
-./bin/flume-ng agent -c ./conf -f ./conf/exec.conf -name a1 -Dflume.root.logger=INFO,console
-
+$ ./bin/flume-ng agent -c ./conf -f ./conf/exec.conf -name a1 -Dflume.root.logger=INFO,console
 ```
 
 ```shell
-
-echo hello >> /root/var/data/log
-echo flume >> /root/var/data/log
-
+$ echo hello >> /root/var/data/log
+$ echo flume >> /root/var/data/log
 ```
 
 ### Syslog TCP Source
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
@@ -107,38 +102,34 @@ a1.channels.c1.transactionCapacity = 100
 
 a1.sinks.s1.type = logger
 a1.sinks.s1.channel = c1
-
 ```
 
 ```shell
-
-./bin/flume-ng agent -c ./conf -f ./conf/syslogtcp.conf -name a1 -Dflume.root.logger=INFO,console
-
+$ ./bin/flume-ng agent -c ./conf -f ./conf/syslogtcp.conf -name a1 -Dflume.root.logger=INFO,console
 ```
 
 ```
-vi /etc/rsyslog.conf
+$ vi /etc/rsyslog.conf
 ```
 
 ```properties
+# remote host is: name/ip:port, e.g. 192.168.0.1:514, port optional
+#*.* @@remote-host:514
 *.* @@localhost:5140
+# ### end of the forwarding rule ###
 ```
 
 ```shell
-logger hello flume
+$ logger hello flume
 ```
 
 ### Spooling Directory Source
 
-Unlike the Exec source, this source is reliable and will not miss data, even if Flume is restarted or killed. In exchange for this reliability, only immutable, uniquely-named files must be dropped into the spooling directory. Flume tries to detect these problem conditions and will fail loudly if they are violated:
-
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
-
 
 a1.sources.r1.type = spooldir
 a1.sources.r1.spoolDir = /root/var/flumespool
@@ -151,30 +142,39 @@ a1.channels.c1.transactionCapacity = 100
 
 a1.sinks.s1.type = logger
 a1.sinks.s1.channel = c1
-
 ```
 
 ```shell
-mkdir -p /root/var/flumespool
-echo hello >> /root/var/flumespool/data1.txt
+$ mkdir -p /root/var/flumespool
+$ echo hello >> /root/var/flumespool/data1.txt
 
 ```
 
-### Custom Source
-
-```java
-```
+### Avro Source
 
 ```properties
+a1.sources = r1
+a1.channels = c1
+a1.sinks = s1
+
+a1.sources.r1.type = avro
+a1.sources.r1.channels = c1
+a1.sources.r1.bind = c1
+a1.sources.r1.port = 4141
+
+a1.channels.c1.type = memory 
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+a1.sinks.s1.type = logger
+a1.sinks.s1.channel = c1
 ```
 
 ## Sink
 
 ### HDFS Sink
-http://flume.apache.org/FlumeUserGuide.html#hdfs-sink
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
@@ -196,50 +196,11 @@ a1.sinks.s1.hdfs.fileType = DataStream
 a1.sinks.s1.hdfs.round = true
 a1.sinks.s1.hdfs.roundValue = 10
 a1.sinks.s1.hdfs.roundUnit = minute
-
-```
-
-### Hive Sink
-http://flume.apache.org/FlumeUserGuide.html#hive-sink
-
-```properteis
-
-a1.sources = r1
-a1.channels = c1
-a1.sinks = s1
-
-a1.sources.r1.type = syslogtcp
-a1.sources.r1.port = 5140
-a1.sources.r1.host = localhost
-a1.sources.r1.channels = c1
-
-a1.channels.c1.type = memory
-a1.channels.c1.capacity = 1000
-a1.channels.c1.transactionCapacity = 100
-
-a1.sinks = s1
-a1.sinks.s1.type = hive
-a1.sinks.s1.channel = c1
-a1.sinks.s1.hive.metastore = thrift://127.0.0.1:9083
-a1.sinks.s1.hive.database = default
-a1.sinks.s1.hive.table = weblogs
-a1.sinks.s1.hive.partition = asia,%{country},%y-%m-%d-%H-%M
-a1.sinks.s1.useLocalTimeStamp = false
-a1.sinks.s1.round = true
-a1.sinks.s1.roundValue = 10
-a1.sinks.s1.roundUnit = minute
-a1.sinks.s1.serializer = DELIMITED
-a1.sinks.s1.serializer.delimiter = "\t"
-a1.sinks.s1.serializer.serdeSeparator = '\t'
-a1.sinks.s1.serializer.fieldnames =id,,msg
-
-
 ```
 
 ### Logger Sink
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
@@ -257,13 +218,11 @@ a1.channels = c1
 a1.sinks = s1
 a1.sinks.s1.type = logger
 a1.sinks.s1.channel = c1
-
 ```
 
 ### Avro Sink
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
@@ -281,7 +240,6 @@ a1.sinks.s1.type = avro
 a1.sinks.s1.channel = c1
 a1.sinks.s1.hostname = localhost
 a1.sinks.s1.port = 4545
-
 ```
 
 ### File Roll Sink
@@ -304,7 +262,6 @@ a1.channels.c1.transactionCapacity = 100
 a1.sinks.s1.type = file_roll
 a1.sinks.s1.channel = c1
 a1.sinks.s1.sink.directory = /root/var/flume/fileroll
-
 ```
 
 ```shell
@@ -315,13 +272,10 @@ mkdir -p /root/var/flume/fileroll
 ### Kafka Sink
 
 ```shell
-
-/usr/hdp/current/kafka-broker/bin/kafka-console-consumer.sh --topic mytopic --zookeeper localhost:2181
-
+$ /usr/hdp/current/kafka-broker/bin/kafka-console-consumer.sh --topic mytopic --zookeeper localhost:2181
 ```
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
@@ -343,16 +297,12 @@ a1.sinks.s1.batchSize = 20
 a1.sinks.s1.channel = c1
 
 ```
-
-### Custom Sink
-
 
 ## Channel
 
 ### Memory Channel
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
@@ -372,13 +322,11 @@ a1.sinks.s1.brokerList = sandbox.hortonworks.com:6667
 a1.sinks.s1.requiredAcks = 1
 a1.sinks.s1.batchSize = 20
 a1.sinks.s1.channel = c1
-
 ```
 
 ### File Channel
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
@@ -395,13 +343,11 @@ a1.channels.c1.dataDirs = /root/var/flume/data
 
 a1.sinks.s1.type = logger
 a1.sinks.s1.channel = c1
-
 ```
 
 ### Spillable Memory Channel
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
@@ -421,13 +367,11 @@ a1.channels.c1.dataDirs = /root/var/flume/data
 
 a1.sinks.s1.type = logger
 a1.sinks.s1.channel = c1
-
 ```
 
 ### Kafka Channel
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
@@ -446,7 +390,6 @@ a1.channels.c1.zookeeperConnect=localhost:2181
 
 a1.sinks.s1.type = logger
 a1.sinks.s1.channel = c1
-
 ```
 
 ## Channel Selectors
@@ -496,7 +439,6 @@ a1.sinks.s3.channel = c3
 ### Multiplexing
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1 c2 c3 c4
 a1.sinks = s1 s2 s3 s4
@@ -544,7 +486,6 @@ a1.sinks.s3.channel = c3
 
 a1.sinks.s4.type = logger
 a1.sinks.s4.channel = c4
-
 ```
 
 ## Sink Processors
@@ -552,7 +493,6 @@ a1.sinks.s4.channel = c4
 ### Failover Sink Processor
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1 s2
@@ -582,13 +522,11 @@ a1.sinks.s2.brokerList = sandbox.hortonworks.com:6667
 a1.sinks.s2.requiredAcks = 1
 a1.sinks.s2.batchSize = 20
 a1.sinks.s2.channel = c1
-
 ```
 
 ### Load balancing Sink Processor
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1 s2
@@ -617,23 +555,13 @@ a1.sinks.s2.brokerList = sandbox.hortonworks.com:6667
 a1.sinks.s2.requiredAcks = 1
 a1.sinks.s2.batchSize = 20
 a1.sinks.s2.channel = c1
-
 ```
-
-### Custom Sink Processor
-
-## Event Serilizers
-
-### Body Text Serializer
-
-### Avro Event Serializer
 
 ## Interceptors
 
 ### Timestamp Interceptor
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
@@ -651,13 +579,11 @@ a1.channels.c1.transactionCapacity = 100
 
 a1.sinks.s1.type = logger
 a1.sinks.s1.channel = c1
-
 ```
 
 ### Host Interceptor
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
@@ -678,13 +604,11 @@ a1.channels.c1.transactionCapacity = 100
 
 a1.sinks.s1.type = logger
 a1.sinks.s1.channel = c1
-
 ```
 
 ### Static Interceptor
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
@@ -704,13 +628,11 @@ a1.channels.c1.transactionCapacity = 100
 
 a1.sinks.s1.type = logger
 a1.sinks.s1.channel = c1
-
 ```
 
 ### UUID Interceptor
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
@@ -731,7 +653,6 @@ a1.channels.c1.transactionCapacity = 100
 
 a1.sinks.s1.type = logger
 a1.sinks.s1.channel = c1
-
 ```
 
 ### Morphline Interceptor
@@ -739,7 +660,6 @@ a1.sinks.s1.channel = c1
 ### Search and Replace Interceptor
 
 ```properties
-
 a1.sources = r1
 a1.channels = c1
 a1.sinks = s1
@@ -760,7 +680,6 @@ a1.channels.c1.transactionCapacity = 100
 
 a1.sinks.s1.type = logger
 a1.sinks.s1.channel = c1
-
 ```
 
 ### Regex Filtering Interceptor
