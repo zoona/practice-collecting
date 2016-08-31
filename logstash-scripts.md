@@ -1,6 +1,6 @@
 # Logstash Scripts
 
-## Install Logstash
+### Install Logstash
 ```
 wget https://download.elastic.co/logstash/logstash/logstash-2.3.4.tar.gz
 tar xvfz logstash-2.3.4.tar.gz
@@ -12,7 +12,7 @@ bin/logstash -e 'input { stdin { } } output { stdout {} }'
 hello
 ```
 
-## Install Elasticsearch
+### Install Elasticsearch
 
 ```
 curl https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.3.5/elasticsearch-2.3.5.tar.gz
@@ -24,12 +24,12 @@ cd elasticsearch-2.3.5
 ./bin/elasticsearch -Des.insecure.allow.root=true
 ```
 
-## Install Kibana
+### Install Kibana
 ```
 curl https://download.elastic.co/kibana/kibana/kibana-4.5.4-linux-x64.tar.gz
 ```
 
-## Skeleton
+### Skeleton
 
 ```properties
 # The # character at the beginning of a line indicates a comment. Use
@@ -45,7 +45,7 @@ output {
 }
 ```
 
-## Sample Data
+### Sample Data
 
 ```shell
 mkdir data && cd data
@@ -54,3 +54,18 @@ gunzip logstash-tutorial.log.gz
 tail logstash-tutorial.log
 ```
 
+### Sample Config
+
+```properties
+input {
+    file {
+        path => "/root/apps/logstash-2.3.4/data/logstash-tutorial.log"
+        start_position => beginning
+        ignore_older => 86400
+    }
+}
+
+output {
+    stdout {}
+}
+```
