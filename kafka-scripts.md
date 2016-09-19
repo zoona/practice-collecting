@@ -183,58 +183,13 @@ $ bin/kafka-run-class.sh \
 ### Kafka Monitor
 
 ```
-$ git clone https://github.com/linkedin/kafka-monitor.git
-cd kafka-monitor
+https://github.com/linkedin/kafka-monitor
 ```
-
-```
-./gradlew jar
-```
-
-```
-$ ./bin/kafka-monitor-start.sh config/kafka-monitor.properties
-```
-
-```
-$ ./bin/end-to-end-test.sh --topic test --broker-list localhost:9092 --zookeeper localhost:2181
-```
-
-```
-$ vi config/kafka-monitor.properties
-```
-
-```properties
-"jetty-service": {
-    "class.name": "com.linkedin.kmf.services.JettyService",
-    "jetty.port": 8989
-  },
-```
-
 
 ### Kafka Manager
 
+```
 https://github.com/yahoo/kafka-manager
-
-```shell
-$ git clone https://github.com/yahoo/kafka-manager.git
-$ cd kafka-manager
-```
-
-```shell
-$ vi conf/application.conf
-```
-
-```properties
-kafka-manager.zkhosts="localhost:2181"
-```
-
-```shell
-$ ./sbt clean dist
-```
-
-```
-$ bin/kafka-manager -Dconfig.file=/path/to/application.conf \
--Dhttp.port=8990
 ```
 
 ### KafkaOffsetMonitor
