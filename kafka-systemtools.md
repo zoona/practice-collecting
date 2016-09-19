@@ -15,6 +15,10 @@ bin/kafka-run-class.sh kafka.tools.ConsumerOffsetChecker
 
 ```
 bin/kafka-run-class.sh kafka.tools.DumpLogSegments
+
+bin/kafka-run-class.sh kafka.tools.DumpLogSegments --files /tmp/kafka-logs/topic-r3p3-2/00000000000000000000.log
+
+bin/kafka-run-class.sh kafka.tools.DumpLogSegments --print-data-log --files /tmp/kafka-logs/topic-r3p3-2/00000000000000000000.log
 ```
 
 ### Export Zookeeper Offsets
@@ -30,6 +34,8 @@ bin/kafka-run-class.sh kafka.tools.ExportZkOffsets
 Topic Offset을 출력
 ```
 bin/kafka-run-class.sh kafka.tools.GetOffsetShell
+
+bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --time -1 --topic topic-r3p3
 ```
 
 ### Import Zookeeper Offsets
@@ -77,4 +83,10 @@ owner는 `/consumers/[consumer_group]/owners/[topic]/[broker_id-partition_id]`�
 
 ```
 bin/kafka-run-class.sh kafka.tools.VerifyConsumerRebalance
+
+bin/kafka-consumer-groups.sh
+
+bin/kafka-consumer-groups.sh --list --zookeeper localhost:2181
+
+bin/kafka-consumer-groups.sh --describe --zookeeper localhost:2181 --group mygroup
 ```
