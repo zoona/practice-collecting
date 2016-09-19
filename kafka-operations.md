@@ -26,7 +26,7 @@
 
 ```
 bin/kafka-preferred-replica-election.sh \
-    —zookeeper zk_host:port/chroot`
+    —zookeeper zk_host:port
 ```
 
 - 이 커맨드를 실행하는게 귀찮기 때문에 다음 configuration을 설정해서 자동화할 수 있다.
