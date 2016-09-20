@@ -106,7 +106,7 @@ $ bin/kafka-topics.sh \
   --zookeeper localhost:2181 \
   --replication-factor 3 \
   --partitions 1 \
-  --topic topic-r3p0
+  --topic topic-r3p1
 ```
 
 ### describe topic
@@ -115,7 +115,7 @@ $ bin/kafka-topics.sh \
 $ bin/kafka-topics.sh \
   --describe \
   --zookeeper localhost:2181 \
-  --topic topic-r3p0
+  --topic topic-r3p1
 ```
 
 ## 5. fault-tolerance
